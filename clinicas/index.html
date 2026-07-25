@@ -1,0 +1,2771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>we clinic — CRM com atendentes de IA para clínicas de estética e odontologia</title>
+    <meta name="description"
+        content="CRM com atendentes de IA que qualificam, agendam e fecham pacientes no WhatsApp — para clínicas de estética e odontologia. Agenda, prontuário e financeiro num só lugar. Um produto WeAreG." />
+    <link rel="icon" href="/brand/weclinic-icon.svg" sizes="any" type="image/svg+xml" />
+    <style>
+        /* ============ TOKENS · IDENTIDADE WE CLINIC ============ */
+        :root {
+            /* superfícies — creme da marca + branco puro nos cards */
+            --paper: #F9F4F2;
+            --paper-2: #F3EBEC;
+            --surface: #FFFFFF;
+            /* texto — família ameixa (ink e ink-2 da marca; soft/faint derivados na mesma matiz) */
+            --ink: #2A2028;
+            --ink-soft: #4C3F48;
+            --muted: #6F5F68;
+            --faint: #9E8E96;
+            --line: #ECE1E4;
+            --line-2: #D9C9CF;
+            /* marca — rosa/ameixa */
+            --rose: #C76B8E;
+            --rose-deep: #A8506F;
+            --rose-soft: #FFE1EC;
+            --accent: var(--rose);
+            --accent-deep: var(--rose-deep);
+            --accent-soft: var(--rose-soft);
+            /* eucalipto — respiro clínico / sucesso */
+            --euca: #2F9E7C;
+            --euca-deep: #25795F;
+            --euca-soft: #EAFAF3;
+            --pos: var(--euca);
+            --pos-soft: var(--euca-soft);
+            /* estados: só rosa, eucalipto e ameixa neutra — sem matizes fora da paleta */
+            --warn: var(--rose-deep);
+            --warn-soft: var(--rose-soft);
+            --info: var(--muted);
+            --info-soft: #F1EAEE;
+            --gold: var(--rose);
+            /* escuro */
+            --ink-2-dark: #3A1F2B;
+            --on-dark: #F3E9EC;
+            --on-dark-sec: #B8A6B0;
+            --on-dark-accent: #E8A6C0;
+            --shadow-s: 0 1px 2px rgba(42, 32, 40, .04), 0 8px 30px rgba(42, 32, 40, .07);
+            --shadow-m: 0 2px 4px rgba(42, 32, 40, .05), 0 14px 44px rgba(42, 32, 40, .10);
+            --shadow-l: 0 4px 8px rgba(42, 32, 40, .06), 0 30px 70px rgba(42, 32, 40, .14);
+            --r-s: 12px;
+            --r-m: 16px;
+            --r-l: 24px;
+            --maxw: 1080px;
+            /* stack nativo — a marca pede zero risco de fonte quebrada */
+            --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --display: "Avenir Next", "Futura", "Century Gothic", "Segoe UI", system-ui, sans-serif;
+            --mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+            --ease-out: cubic-bezier(.22, 1, .36, 1);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink-soft);
+            font-family: var(--sans);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            /* rosa + eucalipto de ambiente */
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(60rem 40rem at 82% -8%, rgba(199, 107, 142, .12), transparent 60%),
+                radial-gradient(50rem 40rem at -10% 12%, rgba(47, 158, 124, .07), transparent 55%);
+        }
+
+        main,
+        header,
+        footer {
+            position: relative;
+            z-index: 1
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--display);
+            color: var(--ink);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -.025em;
+            text-wrap: balance;
+            margin: 0
+        }
+
+        /* ============ WORDMARK ============ */
+        .wm {
+            font-family: var(--display);
+            line-height: .9;
+            letter-spacing: -.03em;
+            white-space: nowrap;
+            font-size: 27px
+        }
+
+        .wm .we {
+            font-weight: 800;
+            color: var(--ink)
+        }
+
+        .wm .cl {
+            font-weight: 500;
+            color: var(--rose)
+        }
+
+        .wm.rev .we {
+            color: #fff
+        }
+
+        .wm.rev .cl {
+            color: var(--rose-soft)
+        }
+
+        /* barra-assinatura da marca */
+        .bar {
+            display: block;
+            width: 64px;
+            height: 6px;
+            background: var(--rose);
+            border-radius: 3px
+        }
+
+        .rule {
+            display: block;
+            width: 26px;
+            height: 3px;
+            background: var(--rose);
+            border-radius: 2px
+        }
+
+        p {
+            margin: 0
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        img,
+        svg {
+            display: block;
+            max-width: 100%
+        }
+
+        :focus-visible {
+            outline: 2.5px solid var(--accent);
+            outline-offset: 3px;
+            border-radius: 4px
+        }
+
+        /* ============ LAYOUT ============ */
+        .wrap {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 0 24px
+        }
+
+        .section {
+            padding: 96px 0
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--rose-deep)
+        }
+
+        .eyebrow.pos {
+            color: var(--euca-deep)
+        }
+
+        .eyebrow.mut {
+            color: var(--muted)
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--rose);
+            flex: none
+        }
+
+        .eyebrow.pos::before {
+            background: var(--euca)
+        }
+
+        .eyebrow.plain::before {
+            content: none
+        }
+
+        .lead {
+            font-size: 18px;
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 56ch
+        }
+
+        .center {
+            text-align: center
+        }
+
+        .center .lead {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .h-sec {
+            font-size: clamp(30px, 4.2vw, 48px)
+        }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -.01em;
+            padding: 14px 24px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: .18s ease;
+            white-space: nowrap
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(199, 107, 142, .30)
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-deep);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(199, 107, 142, .38)
+        }
+
+        .btn-ghost {
+            background: var(--surface);
+            color: var(--ink);
+            border-color: var(--line-2)
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        .btn-lg {
+            padding: 17px 30px;
+            font-size: 16px
+        }
+
+        .btn-white {
+            background: #fff;
+            color: var(--rose-deep);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-m)
+        }
+
+        .btn-line {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255, 255, 255, .5)
+        }
+
+        .btn-line:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, .08)
+        }
+
+        /* ============ HEADER ============ */
+        .hdr {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(249, 244, 242, .86);
+            backdrop-filter: saturate(1.4) blur(14px);
+            border-bottom: 1px solid transparent;
+            transition: .25s
+        }
+
+        .hdr.scrolled {
+            border-color: var(--line);
+            box-shadow: 0 2px 20px rgba(42, 32, 40, .05)
+        }
+
+        .hdr-in {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 74px
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center
+        }
+
+        .ftr .brand .wm {
+            font-size: 31px
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 30px
+        }
+
+        .nav a {
+            font-size: 14.5px;
+            color: var(--ink-soft);
+            font-weight: 500;
+            transition: .15s;
+            font-family: var(--display);
+            letter-spacing: -.01em
+        }
+
+        .nav a:hover {
+            color: var(--accent)
+        }
+
+        .hdr-cta {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .hdr-cta .enter {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--ink)
+        }
+
+        .hdr-cta .enter:hover {
+            color: var(--accent)
+        }
+
+        .burger {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--line-2);
+            background: var(--surface);
+            border-radius: 11px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center
+        }
+
+        .burger span {
+            width: 18px;
+            height: 2px;
+            background: var(--ink);
+            position: relative
+        }
+
+        .burger span::before,
+        .burger span::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 2px;
+            background: var(--ink)
+        }
+
+        .burger span::before {
+            top: -6px
+        }
+
+        .burger span::after {
+            top: 6px
+        }
+
+        /* ============ HERO ============ */
+        .hero {
+            padding: 72px 0 108px
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.02fr 1.1fr;
+            gap: 56px;
+            align-items: center
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 4.6vw, 54px);
+            font-weight: 800;
+            letter-spacing: -.035em;
+            margin: 20px 0 0;
+            line-height: 1.06
+        }
+
+        .hero h1 .rot {
+            color: var(--rose);
+            font-weight: 500;
+            position: relative;
+            display: inline-block
+        }
+
+        .hero .lead {
+            margin-top: 22px;
+            font-size: 19px
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px
+        }
+
+        .trust {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            margin-top: 26px;
+            font-size: 13.5px;
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .trust span {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .trust svg {
+            color: var(--pos)
+        }
+
+        /* dashboard panel */
+        .hero-media {
+            position: relative
+        }
+
+        .panel {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-l);
+            box-shadow: var(--shadow-l);
+            overflow: hidden
+        }
+
+        .panel-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(var(--paper), var(--surface))
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px
+        }
+
+        .dots i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--line-2)
+        }
+
+        .dots i:first-child {
+            background: #E8A6C0
+        }
+
+        .dots i:nth-child(2) {
+            background: #F0CBD9
+        }
+
+        .panel-url {
+            margin-left: 6px;
+            font-size: 11.5px;
+            color: var(--faint);
+            font-family: var(--mono)
+        }
+
+        .panel-tag {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--pos);
+            background: var(--pos-soft);
+            padding: 3px 9px;
+            border-radius: 999px
+        }
+
+        .panel-body {
+            padding: 18px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px
+        }
+
+        .kpi {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--r-s);
+            padding: 13px 14px
+        }
+
+        .kpi .lab {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        .kpi .val {
+            font-family: var(--display);
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            color: var(--ink);
+            margin-top: 5px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1
+        }
+
+        .kpi .delta {
+            font-size: 11.5px;
+            font-weight: 600;
+            margin-top: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .kpi .delta.up {
+            color: var(--pos)
+        }
+
+        .kpi .delta.mut {
+            color: var(--muted)
+        }
+
+        .mini-table {
+            margin-top: 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-s);
+            overflow: hidden;
+            background: var(--surface)
+        }
+
+        .mini-table .th {
+            display: grid;
+            grid-template-columns: 1.6fr .7fr .9fr;
+            gap: 8px;
+            padding: 9px 13px;
+            background: var(--paper);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            color: var(--faint);
+            text-transform: uppercase
+        }
+
+        .mini-table .tr {
+            display: grid;
+            grid-template-columns: 1.6fr .7fr .9fr;
+            gap: 8px;
+            padding: 11px 13px;
+            align-items: center;
+            border-top: 1px solid var(--line);
+            font-size: 13px
+        }
+
+        .mini-table .who {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0
+        }
+
+        .av {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            flex: none;
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            font-family: var(--sans)
+        }
+
+        .who b {
+            font-weight: 600;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12.5px
+        }
+
+        .who small {
+            color: var(--muted);
+            font-size: 11px
+        }
+
+        .time {
+            font-variant-numeric: tabular-nums;
+            color: var(--ink-soft);
+            font-weight: 500
+        }
+
+        .pill {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 999px;
+            justify-self: start;
+            white-space: nowrap
+        }
+
+        .pill.ok {
+            background: var(--pos-soft);
+            color: var(--pos)
+        }
+
+        .pill.wait {
+            background: var(--warn-soft);
+            color: var(--warn)
+        }
+
+        .pill.info {
+            background: var(--info-soft);
+            color: var(--info)
+        }
+
+        .pill.done {
+            background: var(--paper-2);
+            color: var(--muted)
+        }
+
+        .wa-card {
+            position: absolute;
+            right: -30px;
+            bottom: -100px;
+            width: 252px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow-m);
+            padding: 13px 14px
+        }
+
+        .wa-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .wa-ico {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: #25D366;
+            display: grid;
+            place-items: center;
+            flex: none
+        }
+
+        .wa-msg {
+            margin-top: 10px;
+            background: var(--pos-soft);
+            border-radius: 12px 12px 12px 3px;
+            padding: 10px 12px;
+            font-size: 12.5px;
+            color: var(--ink-soft)
+        }
+
+        .wa-ok {
+            margin-top: 8px;
+            font-size: 11.5px;
+            color: var(--pos);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        /* segment strip */
+        .strip {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            background: var(--surface)
+        }
+
+        .strip-in {
+            display: flex;
+            align-items: center;
+            gap: 14px 34px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 22px 0
+        }
+
+        .strip .lbl {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+
+        .strip .seg {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: -.02em;
+            color: var(--ink)
+        }
+
+        .strip .seg svg {
+            color: var(--accent)
+        }
+
+        /* ============ PROBLEM ============ */
+        .problem {
+            background: linear-gradient(var(--paper), var(--paper-2))
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center
+        }
+
+        .problem h2 {
+            font-size: clamp(28px, 3.6vw, 42px)
+        }
+
+        .strike {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        .strike li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 20px;
+            color: var(--muted);
+            font-family: var(--display);
+            font-weight: 500;
+            letter-spacing: -.02em
+        }
+
+        .strike li s {
+            text-decoration-color: var(--rose);
+            text-decoration-thickness: 2px
+        }
+
+        .strike .x {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: var(--rose-soft);
+            color: var(--rose-deep);
+            display: grid;
+            place-items: center;
+            flex: none;
+            font-size: 13px;
+            font-family: var(--sans)
+        }
+
+        .pain-cards {
+            display: grid;
+            gap: 14px
+        }
+
+        .pain {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-m);
+            padding: 20px 22px;
+            box-shadow: var(--shadow-s)
+        }
+
+        .pain .big {
+            font-family: var(--display);
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--rose);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -.035em;
+            flex: none;
+            width: 104px
+        }
+
+        .pain .big small {
+            display: block;
+            font-size: 10.5px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: 7px;
+            font-family: var(--mono)
+        }
+
+        .pain p {
+            font-size: 14.5px;
+            color: var(--ink-soft)
+        }
+
+        .pain b {
+            color: var(--ink)
+        }
+
+        /* ============ FEATURE THEATER ============ */
+        .feat {
+            display: grid;
+            grid-template-columns: 1fr 1.12fr;
+            gap: 56px;
+            align-items: center;
+            padding: 52px 0
+        }
+
+        .feat.flip .feat-copy {
+            order: 2
+        }
+
+        .feat.flip .feat-media {
+            order: 1
+        }
+
+        .feat-copy .eyebrow {
+            margin-bottom: 14px
+        }
+
+        .feat-copy h3 {
+            font-size: clamp(26px, 3.2vw, 36px);
+            font-weight: 700;
+            letter-spacing: -.03em;
+            line-height: 1.1
+        }
+
+        .feat-copy p.desc {
+            margin-top: 16px;
+            font-size: 17px;
+            color: var(--muted);
+            max-width: 46ch
+        }
+
+        .checks {
+            list-style: none;
+            padding: 0;
+            margin: 24px 0 0;
+            display: grid;
+            gap: 12px
+        }
+
+        .checks li {
+            display: flex;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--ink-soft)
+        }
+
+        .checks .ck {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            background: var(--pos-soft);
+            color: var(--pos);
+            display: grid;
+            place-items: center;
+            flex: none;
+            margin-top: 1px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-l);
+            box-shadow: var(--shadow-m);
+            overflow: hidden
+        }
+
+        .card-h {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .card-h .ti {
+            font-family: var(--display);
+            font-weight: 700;
+            font-size: 14.5px;
+            letter-spacing: -.02em;
+            color: var(--ink)
+        }
+
+        .card-h .rt {
+            margin-left: auto;
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: .06em;
+            color: var(--faint)
+        }
+
+        .card-b {
+            padding: 18px
+        }
+
+        /* agenda mockup */
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: 44px repeat(3, 1fr);
+            gap: 8px
+        }
+
+        .agenda-grid .hd {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--muted);
+            text-align: center;
+            padding-bottom: 4px
+        }
+
+        .agenda-grid .hd small {
+            display: block;
+            font-size: 10px;
+            color: var(--faint);
+            font-weight: 600
+        }
+
+        .agenda-grid .tm {
+            font-size: 11px;
+            color: var(--faint);
+            font-weight: 600;
+            text-align: right;
+            padding-top: 6px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .slot {
+            min-height: 46px;
+            border-radius: 9px;
+            padding: 7px 9px;
+            font-size: 11px;
+            line-height: 1.25;
+            border: 1px solid transparent
+        }
+
+        .slot.ok {
+            background: var(--euca-soft);
+            border-color: #C8E8DA
+        }
+
+        .slot.ok b {
+            color: #1F6650
+        }
+
+        .slot.wait {
+            background: var(--rose-soft);
+            border-color: #F5C9DA
+        }
+
+        .slot.wait b {
+            color: #93425F
+        }
+
+        .slot.info {
+            background: var(--info-soft);
+            border-color: #E1D5DB
+        }
+
+        .slot.info b {
+            color: #574853
+        }
+
+        .slot.block {
+            background: repeating-linear-gradient(45deg, var(--paper-2), var(--paper-2) 6px, #E4D7DB 6px, #E4D7DB 12px);
+            border-color: var(--line-2);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            font-weight: 600
+        }
+
+        .slot b {
+            display: block;
+            font-weight: 700;
+            font-size: 11.5px
+        }
+
+        .slot span {
+            color: var(--muted)
+        }
+
+        .slot.empty {
+            background: var(--paper);
+            border: 1px dashed var(--line-2)
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-top: 14px;
+            font-size: 11.5px;
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .legend i {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: -1px
+        }
+
+        /* finance mockup */
+        .fin-top {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px
+        }
+
+        .fin-big {
+            font-family: var(--display);
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            letter-spacing: -.035em
+        }
+
+        .fin-lab {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 5px
+        }
+
+        .fin-legend {
+            display: flex;
+            gap: 14px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--muted)
+        }
+
+        .fin-legend i {
+            width: 9px;
+            height: 9px;
+            border-radius: 2px;
+            display: inline-block;
+            margin-right: 6px
+        }
+
+        .fin-tbl {
+            margin-top: 16px;
+            border-top: 1px solid var(--line)
+        }
+
+        .fin-tbl .r {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr auto;
+            gap: 10px;
+            padding: 9px 2px;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            align-items: center
+        }
+
+        .fin-tbl .r b {
+            font-weight: 600;
+            color: var(--ink)
+        }
+
+        .fin-tbl .r span {
+            color: var(--muted)
+        }
+
+        .fin-tbl .r .v {
+            font-weight: 700;
+            color: var(--pos);
+            font-variant-numeric: tabular-nums;
+            justify-self: end
+        }
+
+        /* prontuario mockup */
+        .pt-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px
+        }
+
+        .pt-head .av {
+            width: 40px;
+            height: 40px;
+            font-size: 13px
+        }
+
+        .pt-head b {
+            font-weight: 700;
+            color: var(--ink);
+            font-size: 15px;
+            display: block
+        }
+
+        .pt-head small {
+            color: var(--muted);
+            font-size: 12.5px
+        }
+
+        .pt-head .ai {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--rose-deep);
+            background: var(--rose-soft);
+            padding: 4px 10px;
+            border-radius: 999px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap
+        }
+
+        .tabs span {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 999px;
+            color: var(--muted);
+            background: var(--paper);
+            border: 1px solid var(--line)
+        }
+
+        .tabs span.on {
+            background: var(--rose-soft);
+            color: var(--rose-deep);
+            border-color: #F5C9DA
+        }
+
+        .evo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px
+        }
+
+        .evo figure {
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--line)
+        }
+
+        .evo .ph {
+            height: 96px;
+            position: relative
+        }
+
+        .evo .ph.a {
+            background: linear-gradient(135deg, #EFE2E7, #D6C2CB)
+        }
+
+        .evo .ph.b {
+            background: linear-gradient(135deg, #FBEAF1, #EFC4D6)
+        }
+
+        .evo figcaption {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 7px 10px;
+            background: var(--surface)
+        }
+
+        .rec {
+            display: grid;
+            gap: 9px
+        }
+
+        .rec .it {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px 12px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-size: 12.5px
+        }
+
+        .rec .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex: none
+        }
+
+        .rec .it b {
+            font-weight: 600;
+            color: var(--ink)
+        }
+
+        .rec .it>span:last-child {
+            color: var(--muted);
+            margin-left: auto;
+            font-weight: 600
+        }
+
+        .signed {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--pos);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        /* whatsapp régua mockup */
+        .regua {
+            display: grid;
+            gap: 12px;
+            position: relative;
+            padding-top: 26px
+        }
+
+        .regua::before {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 36px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--line-2)
+        }
+
+        .step {
+            display: flex;
+            gap: 14px;
+            position: relative
+        }
+
+        .step .node {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--line-2);
+            display: grid;
+            place-items: center;
+            flex: none;
+            z-index: 1;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted)
+        }
+
+        .step.live .node {
+            border-color: var(--pos);
+            color: var(--pos);
+            background: var(--pos-soft)
+        }
+
+        .bubble {
+            flex: 1;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 12px 12px 12px 3px;
+            padding: 11px 13px
+        }
+
+        .bubble .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--rose-deep)
+        }
+
+        .bubble p {
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            margin-top: 5px
+        }
+
+        .bubble .meta {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600
+        }
+
+        .bubble .meta.ok {
+            color: var(--pos)
+        }
+
+        .auto-chip {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--rose-deep);
+            background: var(--rose-soft);
+            border: 1px solid #F5C9DA;
+            padding: 5px 10px;
+            border-radius: 999px
+        }
+
+        /* ============ MORE GRID ============ */
+        .mgrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 44px
+        }
+
+        .mcard {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-m);
+            padding: 26px 24px;
+            box-shadow: var(--shadow-s);
+            transition: .2s
+        }
+
+        .mcard:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-m);
+            border-color: var(--line-2)
+        }
+
+        .mico {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--rose-soft);
+            color: var(--rose-deep);
+            display: grid;
+            place-items: center;
+            margin-bottom: 16px
+        }
+
+        .mcard h4 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -.025em;
+            line-height: 1.2
+        }
+
+        .mcard p {
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        /* ============ SEGMENTOS ============ */
+        .segs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 44px
+        }
+
+        .segc {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-m);
+            padding: 26px 22px;
+            box-shadow: var(--shadow-s);
+            transition: .2s
+        }
+
+        .segc:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-m)
+        }
+
+        .segc .top {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 16px
+        }
+
+        .segc .ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            flex: none
+        }
+
+        .segc h4 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -.025em
+        }
+
+        .segc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 10px
+        }
+
+        .segc li {
+            display: flex;
+            gap: 9px;
+            font-size: 13.5px;
+            color: var(--ink-soft)
+        }
+
+        .segc li svg {
+            color: var(--pos);
+            flex: none;
+            margin-top: 2px
+        }
+
+        /* ============ STATS ============ */
+        .stats {
+            background: var(--ink);
+            color: var(--on-dark);
+            border-radius: var(--r-l);
+            padding: 52px 40px;
+            margin-top: 8px;
+            background-image: radial-gradient(42rem 26rem at 88% -12%, rgba(199, 107, 142, .34), transparent 64%)
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 28px;
+            text-align: center
+        }
+
+        .stat .n {
+            font-family: var(--display);
+            font-size: clamp(34px, 4.5vw, 52px);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -.04em
+        }
+
+        .stat .n .u {
+            color: var(--on-dark-accent)
+        }
+
+        .stat .l {
+            font-size: 14px;
+            color: var(--on-dark-sec);
+            margin-top: 10px;
+            font-weight: 500
+        }
+
+        .stat+.stat {
+            border-left: 1px solid rgba(243, 233, 236, .13)
+        }
+
+        /* ============ TESTIMONIALS ============ */
+        .tgrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 44px
+        }
+
+        .tcard {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-m);
+            padding: 26px 24px;
+            box-shadow: var(--shadow-s);
+            display: flex;
+            flex-direction: column
+        }
+
+        .stars {
+            display: flex;
+            gap: 3px;
+            color: var(--rose);
+            margin-bottom: 14px;
+            font-size: 15px;
+            letter-spacing: 2px
+        }
+
+        .tcard blockquote {
+            margin: 0;
+            font-size: 16px;
+            color: var(--ink-soft);
+            line-height: 1.62;
+            font-family: var(--sans);
+            font-weight: 400;
+            flex: 1
+        }
+
+        .tmeta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line)
+        }
+
+        .tmeta .av {
+            width: 42px;
+            height: 42px;
+            font-size: 14px
+        }
+
+        .tmeta b {
+            font-weight: 600;
+            color: var(--ink);
+            font-size: 14px;
+            display: block
+        }
+
+        .tmeta small {
+            color: var(--muted);
+            font-size: 12.5px
+        }
+
+        .tmeta .chip {
+            margin-left: auto;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--euca-deep);
+            background: var(--euca-soft);
+            padding: 6px 10px;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 1.35
+        }
+
+        /* ============ FAQ ============ */
+        .faq {
+            max-width: 760px;
+            margin: 44px auto 0
+        }
+
+        .faq details {
+            border-bottom: 1px solid var(--line);
+            padding: 6px 0
+        }
+
+        .faq summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 4px;
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: 17.5px;
+            letter-spacing: -.02em;
+            color: var(--ink)
+        }
+
+        .faq summary::-webkit-details-marker {
+            display: none
+        }
+
+        .faq summary .ic {
+            width: 28px;
+            height: 28px;
+            border-radius: 9px;
+            background: var(--rose-soft);
+            display: grid;
+            place-items: center;
+            flex: none;
+            transition: .25s;
+            color: var(--rose-deep);
+            font-size: 18px;
+            line-height: 1;
+            font-family: var(--sans)
+        }
+
+        .faq details[open] summary .ic {
+            transform: rotate(45deg);
+            background: var(--rose);
+            color: #fff
+        }
+
+        .faq .ans {
+            padding: 0 4px 20px;
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 66ch
+        }
+
+        /* ============ CTA ============ */
+        .cta-band {
+            background: linear-gradient(150deg, var(--rose), var(--rose-deep) 52%, var(--ink-2-dark));
+            color: var(--on-dark);
+            border-radius: var(--r-l);
+            padding: 64px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-l)
+        }
+
+        .cta-band::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(30rem 20rem at 80% -20%, rgba(255, 255, 255, .18), transparent 60%);
+            pointer-events: none
+        }
+
+        .cta-band .eyebrow {
+            color: var(--rose-soft)
+        }
+
+        .cta-band .eyebrow::before {
+            background: var(--rose-soft)
+        }
+
+        .cta-band h2 {
+            color: #fff;
+            font-size: clamp(30px, 4vw, 44px);
+            font-weight: 800;
+            letter-spacing: -.035em;
+            position: relative
+        }
+
+        .cta-band p {
+            color: rgba(255, 255, 255, .88);
+            max-width: 52ch;
+            margin: 16px auto 0;
+            font-size: 18px;
+            position: relative
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative
+        }
+
+        .cta-note {
+            margin-top: 20px;
+            font-size: 13.5px;
+            color: rgba(255, 255, 255, .85);
+            position: relative;
+            display: flex;
+            gap: 8px 20px;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        /* ============ FOOTER ============ */
+        .ftr {
+            padding: 70px 0 40px
+        }
+
+        .ftr-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 40px
+        }
+
+        .ftr .brand {
+            margin-bottom: 16px
+        }
+
+        .ftr .tag {
+            font-size: 14px;
+            color: var(--muted);
+            max-width: 34ch
+        }
+
+        .ftr h5 {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 16px
+        }
+
+        .ftr ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 11px
+        }
+
+        .ftr a {
+            font-size: 14px;
+            color: var(--ink-soft)
+        }
+
+        .ftr a:hover {
+            color: var(--accent)
+        }
+
+        .ftr-bot {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .lgpd {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 600;
+            color: var(--pos)
+        }
+
+        /* ============ REVEAL ============ */
+        .rv {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1)
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: none
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            .rv {
+                opacity: 1;
+                transform: none;
+                transition: none
+            }
+
+            html {
+                scroll-behavior: auto
+            }
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width:960px) {
+            .nav {
+                display: none
+            }
+
+            .hdr-cta .enter {
+                display: none
+            }
+
+            .burger {
+                display: flex
+            }
+
+            .hero-grid,
+            .problem-grid,
+            .feat {
+                grid-template-columns: 1fr;
+                gap: 36px
+            }
+
+            .feat.flip .feat-copy {
+                order: 1
+            }
+
+            .feat.flip .feat-media {
+                order: 2
+            }
+
+            .mgrid,
+            .segs,
+            .tgrid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px 24px
+            }
+
+            .stat+.stat {
+                border-left: none
+            }
+
+            .stat:nth-child(3) {
+                border-top: 1px solid rgba(255, 255, 255, .1);
+                padding-top: 26px
+            }
+
+            .stat:nth-child(4) {
+                border-top: 1px solid rgba(255, 255, 255, .1);
+                padding-top: 26px
+            }
+
+            .section {
+                padding: 72px 0
+            }
+        }
+
+        @media (max-width:600px) {
+            .wrap {
+                padding: 0 18px
+            }
+
+            .mgrid,
+            .segs,
+            .tgrid {
+                grid-template-columns: 1fr
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .stats {
+                padding: 40px 24px
+            }
+
+            .cta-band {
+                padding: 48px 24px
+            }
+
+            .hero h1 {
+                font-size: 38px
+            }
+
+            .pain .big {
+                width: auto
+            }
+
+            .wa-card {
+                position: static;
+                width: 100%;
+                margin-top: 14px;
+                right: 0;
+                bottom: 0
+            }
+
+            .ftr-grid {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ HEADER ============ -->
+    <header class="hdr" id="hdr">
+        <div class="wrap hdr-in">
+            <a href="#top" class="brand" aria-label="we clinic — início">
+                <span class="wm"><span class="we">we</span>&#8202;<span class="cl">clinic</span></span>
+            </a>
+            <nav class="nav" aria-label="Navegação principal">
+                <a href="#funcionalidades">Funcionalidades</a>
+                <a href="#modulos">Módulos</a>
+                <a href="#segmentos">Especialidades</a>
+                <a href="#depoimentos">Depoimentos</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="hdr-cta">
+                <a href="#cta" class="enter">Entrar</a>
+                <a href="#cta" class="btn btn-primary">Agende uma demo</a>
+                <button class="burger" id="burger" aria-label="Abrir menu"><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+
+        <!-- ============ HERO ============ -->
+        <section class="hero wrap">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow rv">Gestão e automação para clínicas</span>
+                    <h1 class="rv">A sua clínica no <span class="rot">automático</span>, do primeiro contato ao retorno.
+                    </h1>
+                    <span class="bar rv" style="margin-top:26px" aria-hidden="true"></span>
+                    <p class="lead rv">Agenda, prontuário, financeiro e marketing num só lugar. A We Clinic confirma
+                        pacientes por WhatsApp, reduz as faltas e organiza o dinheiro — enquanto você cuida de quem
+                        importa.</p>
+                    <div class="hero-cta rv">
+                        <a href="#cta" class="btn btn-primary btn-lg">Agende uma demonstração</a>
+                        <a href="#funcionalidades" class="btn btn-ghost btn-lg">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            Ver a plataforma
+                        </a>
+                    </div>
+                    <div class="trust rv">
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> 7 dias grátis</span>
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Sem instalação</span>
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Suporte humano</span>
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Conformidade com a LGPD</span>
+                    </div>
+                </div>
+
+                <div class="hero-media rv">
+                    <div class="panel">
+                        <div class="panel-bar">
+                            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                            <span class="panel-url">app.weclinic.com.br · Painel</span>
+                            <span class="panel-tag">● ao vivo</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="kpis">
+                                <div class="kpi">
+                                    <div class="lab">Pacientes ativos</div>
+                                    <div class="val">312</div>
+                                    <div class="delta up">▲ +24 este mês</div>
+                                </div>
+                                <div class="kpi">
+                                    <div class="lab">Agendamentos hoje</div>
+                                    <div class="val">14</div>
+                                    <div class="delta mut">4 confirmados agora</div>
+                                </div>
+                                <div class="kpi">
+                                    <div class="lab">Receita do mês</div>
+                                    <div class="val">R$ 52,4k</div>
+                                    <div class="delta up">▲ +15% vs. jun</div>
+                                </div>
+                            </div>
+                            <div class="mini-table">
+                                <div class="th"><span>Paciente</span><span>Horário</span><span>Status</span></div>
+                                <div class="tr">
+                                    <div class="who"><span class="av" style="background:#C76B8E">AL</span>
+                                        <div><b>Ana Lima</b><br><small>Botox full face</small></div>
+                                    </div>
+                                    <div class="time">09h30</div>
+                                    <div><span class="pill done">Concluído</span></div>
+                                </div>
+                                <div class="tr">
+                                    <div class="who"><span class="av" style="background:#2F9E7C">PR</span>
+                                        <div><b>Pedro Rocha</b><br><small>Avaliação · fisio</small></div>
+                                    </div>
+                                    <div class="time">11h00</div>
+                                    <div><span class="pill ok">Confirmado</span></div>
+                                </div>
+                                <div class="tr">
+                                    <div class="who"><span class="av" style="background:#8A6B7C">MC</span>
+                                        <div><b>Mariana Costa</b><br><small>Harmonização</small></div>
+                                    </div>
+                                    <div class="time">14h00</div>
+                                    <div><span class="pill wait">Aguardando</span></div>
+                                </div>
+                                <div class="tr">
+                                    <div class="who"><span class="av" style="background:#A8506F">FC</span>
+                                        <div><b>Fernanda Castro</b><br><small>Retorno · nutrição</small></div>
+                                    </div>
+                                    <div class="time">16h30</div>
+                                    <div><span class="pill info">Check-in</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wa-card" aria-hidden="true">
+                        <div class="wa-head"><span class="wa-ico"><svg width="15" height="15" viewBox="0 0 24 24"
+                                    fill="#fff">
+                                    <path d="M12 2a10 10 0 00-8.6 15l-1 4 4.1-1A10 10 0 1012 2z" />
+                                </svg></span> Confirmação automática · agora</div>
+                        <div class="wa-msg">Olá, Mariana! Sua sessão de harmonização é amanhã às 14h00. Podemos
+                            confirmar? 💗</div>
+                        <div class="wa-ok"><svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Confirmada pela paciente · 09h42</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SEGMENT STRIP ============ -->
+        <div class="strip rv">
+            <div class="wrap strip-in">
+                <span class="lbl">Feito para clínicas de</span>
+                <span class="seg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="currentColor"
+                            stroke-width="1.8" />
+                    </svg> Estética</span>
+                <span class="seg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M8 3c-2.5 0-4 2-4 5 0 4 1.5 13 3.5 13 1.2 0 1.3-4 2.5-4s1.3 4 2.5 4c2 0 3.5-9 3.5-13 0-3-1.5-5-4-5-1.5 0-2 1-2 1s-.5-1-2-1z"
+                            stroke="currentColor" stroke-width="1.7" />
+                    </svg> Odontologia</span>
+                <span class="seg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 20l6-6 3-3m3-5l-3 3m5-1l1 5-5-1m4-4l-3-1-1-3" stroke="currentColor"
+                            stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg> Fisioterapia</span>
+                <span class="seg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3c4 4 7 6 7 10a7 7 0 11-14 0c0-4 3-6 7-10z" stroke="currentColor"
+                            stroke-width="1.7" />
+                    </svg> Nutrição</span>
+            </div>
+        </div>
+
+        <!-- ============ PROBLEM ============ -->
+        <section class="problem">
+            <div class="wrap section">
+                <div class="problem-grid">
+                    <div class="rv">
+                        <span class="eyebrow">O improviso custa caro</span>
+                        <ul class="strike" style="margin-top:20px">
+                            <li><span class="x">✕</span> <s>Agenda no WhatsApp</s></li>
+                            <li><span class="x">✕</span> <s>Prontuário em papel</s></li>
+                            <li><span class="x">✕</span> <s>Financeiro na planilha</s></li>
+                        </ul>
+                        <h2 style="margin-top:26px">Sua clínica já cresceu além do improviso. Só faltava um sistema à
+                            altura.</h2>
+                        <p class="lead" style="margin-top:18px">Cada falta, cada retorno esquecido e cada paciente que
+                            some depois da primeira sessão é dinheiro saindo pela porta. A We Clinic fecha essas portas
+                            — no automático.</p>
+                    </div>
+                    <div class="pain-cards rv">
+                        <div class="pain">
+                            <div class="big">30%<small>das faltas</small></div>
+                            <p><b>No-show sem confirmação.</b> Horários vazios que ninguém preencheu porque o lembrete
+                                dependia de alguém lembrar de mandar.</p>
+                        </div>
+                        <div class="pain">
+                            <div class="big">6h<small>por semana</small></div>
+                            <p><b>Tempo perdido em planilha.</b> Recepção e gestão refazendo à mão o que o sistema
+                                deveria calcular sozinho.</p>
+                        </div>
+                        <div class="pain">
+                            <div class="big">1 em 3<small>pacientes</small></div>
+                            <p><b>Some após a 1ª visita.</b> Sem régua de retorno e reativação, o paciente esfria e vai
+                                para a concorrência.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ FEATURE THEATER ============ -->
+        <section class="wrap section" id="funcionalidades">
+            <div class="center rv" style="max-width:640px; margin:0 auto 20px">
+                <span class="eyebrow">Funcionalidades</span>
+                <h2 class="h-sec" style="margin-top:14px">Tudo o que a rotina da clínica exige, num só lugar.</h2>
+                <p class="lead" style="margin-top:16px">Cada módulo com a sua própria tela — pensado para o dia a dia de
+                    quem atende, não para quem programa.</p>
+            </div>
+
+            <!-- Feature 1: Agenda -->
+            <div class="feat">
+                <div class="feat-copy rv">
+                    <span class="eyebrow">Agenda inteligente</span>
+                    <h3>Uma agenda que trabalha por você</h3>
+                    <p class="desc">Visualize e gerencie todos os agendamentos com clareza. A We Clinic confirma por
+                        WhatsApp, lembra o paciente e reduz as faltas — sem você digitar nada.</p>
+                    <ul class="checks">
+                        <li><span class="ck">✓</span> Visão por dia, semana ou profissional</li>
+                        <li><span class="ck">✓</span> Confirmação e lembrete automáticos por WhatsApp</li>
+                        <li><span class="ck">✓</span> Encaixe inteligente e controle de cancelamentos</li>
+                        <li><span class="ck">✓</span> Bloqueios de horário e múltiplas salas</li>
+                    </ul>
+                </div>
+                <div class="feat-media rv">
+                    <div class="card">
+                        <div class="card-h"><span class="ti">Agenda</span><span class="rt">semana · 14–16 jul</span>
+                        </div>
+                        <div class="card-b">
+                            <div class="agenda-grid">
+                                <div class="hd"></div>
+                                <div class="hd">Seg<small>14</small></div>
+                                <div class="hd">Ter<small>15</small></div>
+                                <div class="hd">Qua<small>16</small></div>
+                                <div class="tm">09h</div>
+                                <div class="slot ok"><b>Ana Lima</b><span>Botox full face</span></div>
+                                <div class="slot ok"><b>Pedro Rocha</b><span>Limpeza de pele</span></div>
+                                <div class="slot empty"></div>
+                                <div class="tm">11h</div>
+                                <div class="slot info"><b>Ricardo Klein</b><span>Avaliação</span></div>
+                                <div class="slot empty"></div>
+                                <div class="slot ok"><b>Joice Silva</b><span>Preenchimento</span></div>
+                                <div class="tm">14h</div>
+                                <div class="slot wait"><b>Mariana Costa</b><span>Harmonização</span></div>
+                                <div class="slot ok"><b>Fernanda C.</b><span>Fios de PDO</span></div>
+                                <div class="slot block">Bloqueio · sala 2</div>
+                                <div class="tm">16h</div>
+                                <div class="slot empty"></div>
+                                <div class="slot ok"><b>Bruna Reis</b><span>Peeling</span></div>
+                                <div class="slot info"><b>Luís Antônio</b><span>Retorno</span></div>
+                            </div>
+                            <div class="legend">
+                                <span><i style="background:#7CC9AC"></i>Confirmado por WhatsApp</span>
+                                <span><i style="background:#E8A6C0"></i>Aguardando resposta</span>
+                                <span><i style="background:#BBAAB3"></i>Check-in / retorno</span>
+                                <span><i style="background:#D9C9CF"></i>Bloqueio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Financeiro -->
+            <div class="feat flip">
+                <div class="feat-copy rv">
+                    <span class="eyebrow">Financeiro</span>
+                    <h3>Onde o dinheiro está — e onde deveria estar</h3>
+                    <p class="desc">Dashboards que mostram exatamente para onde vai o caixa. Do fluxo de caixa às
+                        comissões e à cobrança recorrente, tudo automatizado.</p>
+                    <ul class="checks">
+                        <li><span class="ck">✓</span> Fluxo de caixa em tempo real com projeções</li>
+                        <li><span class="ck">✓</span> Comissões automáticas por profissional</li>
+                        <li><span class="ck">✓</span> Contas a pagar e receber com alertas</li>
+                        <li><span class="ck">✓</span> Cobrança por link, recorrência e pacotes de sessões</li>
+                    </ul>
+                </div>
+                <div class="feat-media rv">
+                    <div class="card">
+                        <div class="card-h"><span class="ti">Financeiro</span><span class="rt">visão do mês</span></div>
+                        <div class="card-b">
+                            <div class="fin-top">
+                                <div>
+                                    <div class="fin-lab">Receita · julho</div>
+                                    <div class="fin-big">R$ 52.400</div>
+                                </div>
+                                <div class="fin-legend"><span><i
+                                            style="background:var(--pos)"></i>Receita</span><span><i
+                                            style="background:#E8A6C0"></i>Despesas</span></div>
+                            </div>
+                            <svg viewBox="0 0 340 140" width="100%" height="140" style="margin-top:14px" role="img"
+                                aria-label="Gráfico de receita e despesas de fevereiro a julho, com crescimento constante da receita">
+                                <line x1="0" y1="118" x2="340" y2="118" stroke="#ECE1E4" stroke-width="1" />
+                                <line x1="0" y1="78" x2="340" y2="78" stroke="#F5EEF0" stroke-width="1" />
+                                <line x1="0" y1="38" x2="340" y2="38" stroke="#F5EEF0" stroke-width="1" />
+                                <g font-family="system-ui, sans-serif" font-size="10" fill="#9E8E96"
+                                    text-anchor="middle">
+                                    <rect x="18" y="70" width="15" height="48" rx="3" fill="#2F9E7C" />
+                                    <rect x="35" y="88" width="15" height="30" rx="3" fill="#E8A6C0" /><text x="34"
+                                        y="132">Fev</text>
+                                    <rect x="72" y="58" width="15" height="60" rx="3" fill="#2F9E7C" />
+                                    <rect x="89" y="84" width="15" height="34" rx="3" fill="#E8A6C0" /><text x="88"
+                                        y="132">Mar</text>
+                                    <rect x="126" y="62" width="15" height="56" rx="3" fill="#2F9E7C" />
+                                    <rect x="143" y="90" width="15" height="28" rx="3" fill="#E8A6C0" /><text x="142"
+                                        y="132">Abr</text>
+                                    <rect x="180" y="46" width="15" height="72" rx="3" fill="#2F9E7C" />
+                                    <rect x="197" y="82" width="15" height="36" rx="3" fill="#E8A6C0" /><text x="196"
+                                        y="132">Mai</text>
+                                    <rect x="234" y="40" width="15" height="78" rx="3" fill="#2F9E7C" />
+                                    <rect x="251" y="86" width="15" height="32" rx="3" fill="#E8A6C0" /><text x="250"
+                                        y="132">Jun</text>
+                                    <rect x="288" y="26" width="15" height="92" rx="3" fill="#2F9E7C" />
+                                    <rect x="305" y="80" width="15" height="38" rx="3" fill="#E8A6C0" /><text x="304"
+                                        y="132">Jul</text>
+                                </g>
+                            </svg>
+                            <div class="fin-tbl">
+                                <div class="r"><b>Ana Lima</b><span>Botox full face</span><span class="v">R$
+                                        1.250</span></div>
+                                <div class="r"><b>Mariana Costa</b><span>Harmonização</span><span class="v">R$
+                                        890</span></div>
+                                <div class="r"><b>Fernanda Castro</b><span>Fios de PDO</span><span class="v">R$
+                                        1.100</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Prontuário -->
+            <div class="feat">
+                <div class="feat-copy rv">
+                    <span class="eyebrow">Prontuário &amp; registro clínico</span>
+                    <h3>Cada atendimento, registrado ponto a ponto</h3>
+                    <p class="desc">Ficha completa, anamnese com apoio de IA, fotos de evolução e termos assinados —
+                        visual, preciso e fácil de mostrar para o paciente. Adaptado a cada especialidade.</p>
+                    <ul class="checks">
+                        <li><span class="ck">✓</span> Anamnese e prontuário digital com apoio de IA</li>
+                        <li><span class="ck">✓</span> Fotos de evolução (antes e depois) por sessão</li>
+                        <li><span class="ck">✓</span> Plano de tratamento ou plano alimentar</li>
+                        <li><span class="ck">✓</span> Termos de consentimento com assinatura eletrônica</li>
+                    </ul>
+                </div>
+                <div class="feat-media rv">
+                    <div class="card">
+                        <div class="card-h"><span class="ti">Prontuário</span><span class="rt">Mariana Costa ·
+                                #0312</span></div>
+                        <div class="card-b">
+                            <div class="pt-head">
+                                <span class="av" style="background:#8A6B7C">MC</span>
+                                <div><b>Mariana Costa</b><small>Harmonização facial · sessão 3 de 4</small></div>
+                                <span class="ai">✦ Anamnese com IA</span>
+                            </div>
+                            <div class="tabs"><span
+                                    class="on">Evolução</span><span>Anamnese</span><span>Fotos</span><span>Termos</span>
+                            </div>
+                            <div class="evo">
+                                <figure>
+                                    <div class="ph a"></div>
+                                    <figcaption>Antes · 12 mai</figcaption>
+                                </figure>
+                                <figure>
+                                    <div class="ph b"></div>
+                                    <figcaption>Depois · hoje</figcaption>
+                                </figure>
+                            </div>
+                            <div class="rec">
+                                <div class="it"><span class="dot"></span><b>Glabela</b><span>Toxina · 20U</span></div>
+                                <div class="it"><span class="dot"></span><b>Malar esq. + dir.</b><span>Preench. · 1,0
+                                        ml</span></div>
+                                <div class="it"><span class="dot"></span><b>Lábios</b><span>Preench. · 0,8 ml</span>
+                                </div>
+                            </div>
+                            <div class="signed"><svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg> Registrado com lote, validade e termo assinado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4: Automação / WhatsApp -->
+            <div class="feat flip">
+                <div class="feat-copy rv">
+                    <span class="eyebrow">Automação &amp; relacionamento</span>
+                    <h3>O relacionamento continua depois da consulta</h3>
+                    <p class="desc">Confirmação, pós-atendimento, aniversário e convite de retorno saem sozinhos pelo
+                        WhatsApp — com o nome da sua clínica. É o funil de captação e retenção rodando no piloto
+                        automático.</p>
+                    <ul class="checks">
+                        <li><span class="ck">✓</span> Confirmação anti-no-show e follow-up de leads</li>
+                        <li><span class="ck">✓</span> Régua automática de pós-atendimento (D+1, D+7, D+30)</li>
+                        <li><span class="ck">✓</span> Reativação de pacientes parados e aniversários</li>
+                        <li><span class="ck">✓</span> Modelos de mensagem personalizáveis por procedimento</li>
+                    </ul>
+                </div>
+                <div class="feat-media rv">
+                    <div class="card">
+                        <div class="card-h"><span class="ti">Relacionamento</span><span class="rt">régua
+                                automática</span></div>
+                        <div class="card-b">
+                            <div class="regua">
+                                <span class="auto-chip">⚡ Automático</span>
+                                <div class="step live">
+                                    <span class="node">✓</span>
+                                    <div class="bubble"><span class="tag">Confirmação · anti-falta</span>
+                                        <p>Oi, Mariana! Sua sessão é amanhã às 14h. Posso confirmar?</p>
+                                        <div class="meta ok"><svg width="12" height="12" viewBox="0 0 24 24"
+                                                fill="none">
+                                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg> Confirmada · 09h42</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="node">D+1</span>
+                                    <div class="bubble"><span class="tag">Cuidados pós-sessão</span>
+                                        <p>Como você está se sentindo hoje? Qualquer dúvida sobre os cuidados, é só
+                                            responder por aqui. 💗</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="node">D+7</span>
+                                    <div class="bubble"><span class="tag">Pesquisa de satisfação</span>
+                                        <p>De 0 a 10, o quanto você recomendaria a nossa clínica?</p>
+                                        <div class="meta">Enviada automaticamente</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="node">D+30</span>
+                                    <div class="bubble"><span class="tag">Convite de retorno</span>
+                                        <p>Chegou a hora da sua manutenção — temos horários abertos essa semana. Quer
+                                            agendar?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ MORE GRID ============ -->
+        <section class="problem" id="modulos">
+            <div class="wrap section">
+                <div class="center rv" style="max-width:620px; margin:0 auto">
+                    <span class="eyebrow">E muito mais</span>
+                    <h2 class="h-sec" style="margin-top:14px">O dia a dia inteiro da clínica, de ponta a ponta.</h2>
+                </div>
+                <div class="mgrid">
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" />
+                            </svg></div>
+                        <h4>Estoque com baixa automática</h4>
+                        <p>Insumos baixam sozinhos a cada atendimento, com custo médio, validade e alertas de reposição.
+                        </p>
+                    </div>
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3v18M7 8h7a3 3 0 010 6H8a3 3 0 000 6h9" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg></div>
+                        <h4>Comissões automáticas</h4>
+                        <p>Cada procedimento gera a comissão do profissional na hora — sem conta de cabeça no fim do
+                            mês.</p>
+                    </div>
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor"
+                                    stroke-width="2" />
+                                <path d="M3 10h18" stroke="currentColor" stroke-width="2" />
+                            </svg></div>
+                        <h4>Cobrança &amp; pagamentos</h4>
+                        <p>Link de pagamento, recorrência, pacotes de sessões e lembrete de vencimento — tudo integrado.
+                        </p>
+                    </div>
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg></div>
+                        <h4>Tarefas &amp; ponto da equipe</h4>
+                        <p>Checklists da rotina, atribuição por colaborador e registro de ponto digital, no mesmo lugar.
+                        </p>
+                    </div>
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                <path d="M7 14l3-3 3 2 4-6" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg></div>
+                        <h4>Relatórios &amp; indicadores</h4>
+                        <p>Ocupação da agenda, no-show, ticket médio e receita por profissional — decisão com dado, não
+                            achismo.</p>
+                    </div>
+                    <div class="mcard rv">
+                        <div class="mico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" stroke="currentColor"
+                                    stroke-width="2" stroke-linejoin="round" />
+                                <path d="M9.5 12l1.8 1.8 3.5-3.6" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg></div>
+                        <h4>Multi-unidades, perfis &amp; LGPD</h4>
+                        <p>Várias salas e unidades com gestão centralizada, permissões por cargo e dados isolados por
+                            clínica.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SEGMENTOS ============ -->
+        <section class="wrap section" id="segmentos">
+            <div class="center rv" style="max-width:640px; margin:0 auto">
+                <span class="eyebrow">Feito para a sua especialidade</span>
+                <h2 class="h-sec" style="margin-top:14px">Uma plataforma, quatro rotinas diferentes.</h2>
+                <p class="lead" style="margin-top:16px">A We Clinic se molda ao fluxo de cada tipo de clínica — com
+                    fichas e automações específicas para cada área.</p>
+            </div>
+            <div class="segs">
+                <div class="segc rv">
+                    <div class="top"><span class="ico" style="background:#C76B8E"><svg width="22" height="22"
+                                viewBox="0 0 24 24" fill="none">
+                                <path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff"
+                                    stroke-width="1.9" />
+                            </svg></span>
+                        <h4>Estética</h4>
+                    </div>
+                    <ul>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Fotos de evolução e antes/depois</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Pacotes, sessões e mapa de aplicação</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Confirmação e retorno automáticos</li>
+                    </ul>
+                </div>
+                <div class="segc rv">
+                    <div class="top"><span class="ico" style="background:#2A2028"><svg width="22" height="22"
+                                viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M8 3c-2.5 0-4 2-4 5 0 4 1.5 13 3.5 13 1.2 0 1.3-4 2.5-4s1.3 4 2.5 4c2 0 3.5-9 3.5-13 0-3-1.5-5-4-5-1.5 0-2 1-2 1s-.5-1-2-1z"
+                                    stroke="#fff" stroke-width="1.7" />
+                            </svg></span>
+                        <h4>Odontologia</h4>
+                    </div>
+                    <ul>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Odontograma e plano por fases</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Orçamentos e faturamento de convênios</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Controle de procedimentos e retornos</li>
+                    </ul>
+                </div>
+                <div class="segc rv">
+                    <div class="top"><span class="ico" style="background:#2F9E7C"><svg width="22" height="22"
+                                viewBox="0 0 24 24" fill="none">
+                                <path d="M4 20l6-6 3-3m3-5l-3 3m5-1l1 5-5-1m4-4l-3-1-1-3" stroke="#fff"
+                                    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg></span>
+                        <h4>Fisioterapia</h4>
+                    </div>
+                    <ul>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Evolução clínica por sessão</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Planos terapêuticos e avaliação funcional</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Controle de pacotes de sessões</li>
+                    </ul>
+                </div>
+                <div class="segc rv">
+                    <div class="top"><span class="ico" style="background:#A8506F"><svg width="22" height="22"
+                                viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3c4 4 7 6 7 10a7 7 0 11-14 0c0-4 3-6 7-10z" stroke="#fff"
+                                    stroke-width="1.7" />
+                            </svg></span>
+                        <h4>Nutrição</h4>
+                    </div>
+                    <ul>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Anamnese e plano alimentar</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Antropometria e bioimpedância</li>
+                        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Retornos e acompanhamento contínuo</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ STATS ============ -->
+        <section class="wrap">
+            <div class="stats rv">
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div class="n">−30<span class="u">%</span></div>
+                        <div class="l">de faltas com confirmação automática</div>
+                    </div>
+                    <div class="stat">
+                        <div class="n">+15<span class="u">%</span></div>
+                        <div class="l">de faturamento com agenda cheia e cobrança em dia</div>
+                    </div>
+                    <div class="stat">
+                        <div class="n">1</div>
+                        <div class="l">único lugar para agenda, prontuário e financeiro</div>
+                    </div>
+                    <div class="stat">
+                        <div class="n">100<span class="u">%</span></div>
+                        <div class="l">na nuvem, com segurança alinhada à LGPD</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ TESTIMONIALS ============ -->
+        <section class="wrap section" id="depoimentos">
+            <div class="center rv" style="max-width:600px; margin:0 auto">
+                <span class="eyebrow">Depoimentos</span>
+                <h2 class="h-sec" style="margin-top:14px">O que dizem as clínicas que já saíram do improviso.</h2>
+            </div>
+            <div class="tgrid">
+                <div class="tcard rv">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>“Reduzimos as faltas em mais de 30% já no primeiro mês. As confirmações automáticas
+                        mudaram a rotina da recepção.”</blockquote>
+                    <div class="tmeta"><span class="av" style="background:#C76B8E">MB</span>
+                        <div><b>Dra. Marina Braga</b><small>Clínica de Estética</small></div><span
+                            class="chip">faltas<br>−32%</span>
+                    </div>
+                </div>
+                <div class="tcard rv">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>“A agenda parou de ter buracos e hoje acompanho o faturamento e as comissões da equipe
+                        em tempo real, de qualquer lugar.”</blockquote>
+                    <div class="tmeta"><span class="av" style="background:#A8506F">RA</span>
+                        <div><b>Dr. Rafael Alves</b><small>Clínica Odontológica</small></div><span
+                            class="chip">agenda<br>+21%</span>
+                    </div>
+                </div>
+                <div class="tcard rv">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>“A migração foi tranquila e minha equipe aprendeu em um dia. A régua de retorno trouxe
+                        de volta pacientes que eu já tinha perdido.”</blockquote>
+                    <div class="tmeta"><span class="av" style="background:#2F9E7C">CM</span>
+                        <div><b>Camila Moraes</b><small>Fisioterapia &amp; Nutrição</small></div><span
+                            class="chip">retorno<br>+18%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ FAQ ============ -->
+        <section class="problem" id="faq">
+            <div class="wrap section">
+                <div class="center rv" style="max-width:560px; margin:0 auto">
+                    <span class="eyebrow">Perguntas frequentes</span>
+                    <h2 class="h-sec" style="margin-top:14px">Tudo o que você precisa saber antes de começar.</h2>
+                </div>
+                <div class="faq rv">
+                    <details open>
+                        <summary>Preciso trocar o meu sistema atual de uma vez? <span class="ic">+</span></summary>
+                        <div class="ans">Não. A nossa equipe migra os seus dados e a plataforma pode rodar em paralelo
+                            ao seu processo atual até você ter total segurança para a virada completa.</div>
+                    </details>
+                    <details>
+                        <summary>A plataforma serve para a minha especialidade? <span class="ic">+</span></summary>
+                        <div class="ans">Sim. Atendemos clínicas de estética, odontologia, fisioterapia e nutrição, com
+                            fichas, prontuários e automações específicos para o fluxo de cada área.</div>
+                    </details>
+                    <details>
+                        <summary>Como funciona a implantação e a migração? <span class="ic">+</span></summary>
+                        <div class="ans">Configuramos os módulos, importamos os seus dados e treinamos a sua equipe. A
+                            maioria das clínicas começa a usar em poucos dias, com acompanhamento próximo do nosso time.
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Preciso entender de tecnologia para usar? <span class="ic">+</span></summary>
+                        <div class="ans">Não. A plataforma foi desenhada para a recepção e para os profissionais da
+                            clínica — não para quem programa. Se você usa WhatsApp, você usa a We Clinic.</div>
+                    </details>
+                    <details>
+                        <summary>Os meus dados ficam seguros? <span class="ic">+</span></summary>
+                        <div class="ans">Sim. Criptografia em trânsito e em repouso, dados isolados por clínica, backups
+                            automáticos e práticas alinhadas à LGPD. Você mantém o controle total das informações.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CTA ============ -->
+        <section class="wrap section" id="cta">
+            <div class="cta-band rv">
+                <span class="eyebrow">Comece hoje</span>
+                <h2 style="margin-top:14px">A sua clínica no automático começa agora.</h2>
+                <p>Agende uma demonstração gratuita e veja, com os seus próprios números, quanto a sua clínica pode
+                    economizar e faturar a mais.</p>
+                <div class="cta-actions">
+                    <a href="#" class="btn btn-white btn-lg">Agende uma demonstração</a>
+                    <a href="#" class="btn btn-line btn-lg">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2a10 10 0 00-8.6 15l-1 4 4.1-1A10 10 0 1012 2z" />
+                        </svg>
+                        Falar no WhatsApp
+                    </a>
+                </div>
+                <div class="cta-note">
+                    <span>• 7 dias grátis</span><span>• Sem cartão de crédito</span><span>• Cancele quando quiser</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="ftr">
+        <div class="wrap">
+            <div class="ftr-grid">
+                <div>
+                    <div class="brand"><span class="wm"><span class="we">we</span>&#8202;<span
+                                class="cl">clinic</span></span></div>
+                    <p class="tag">A plataforma de gestão e automação para clínicas de estética, odontologia,
+                        fisioterapia e nutrição.</p>
+                </div>
+                <div>
+                    <h5>Produto</h5>
+                    <ul>
+                        <li><a href="#funcionalidades">Funcionalidades</a></li>
+                        <li><a href="#modulos">Módulos</a></li>
+                        <li><a href="#segmentos">Especialidades</a></li>
+                        <li><a href="#cta">Agende uma demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Empresa</h5>
+                    <ul>
+                        <li><a href="#">Sobre nós</a></li>
+                        <li><a href="#">Contato</a></li>
+                        <li><a href="#">Central de ajuda</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">LGPD</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ftr-bot">
+                <span>© 2026 We Clinic · um produto WeAreG. Todos os direitos reservados.</span>
+                <span class="lgpd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" stroke="currentColor"
+                            stroke-width="2" stroke-linejoin="round" />
+                    </svg> Dados protegidos e em conformidade com a LGPD</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            var hdr = document.getElementById('hdr');
+            var onScroll = function () { hdr.classList.toggle('scrolled', window.scrollY > 8); };
+            onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+
+            var burger = document.getElementById('burger');
+            if (burger) {
+                burger.addEventListener('click', function () {
+                    var t = document.querySelector('#funcionalidades'); if (t) t.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var items = document.querySelectorAll('.rv');
+            if (reduce || !('IntersectionObserver' in window)) {
+                items.forEach(function (el) { el.classList.add('in'); });
+            } else {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+                items.forEach(function (el) { io.observe(el); });
+            }
+        })();
+    </script>
+</body>
+
+</html>
