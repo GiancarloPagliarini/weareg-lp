@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Aplicação · Sessão estratégica gratuita — we clinic</title>
+<meta name="description" content="Aplique para uma sessão estratégica gratuita com a We Clinic. Exclusivo para médicos e donos de clínica."/>
+<meta name="robots" content="noindex"/>
+<link rel="icon" href="brand/weclinic-icon.svg" sizes="any" type="image/svg+xml"/>
+<style>
+/* ============ TOKENS · IDENTIDADE WE CLINIC ============ */
+:root{
+  --paper:#F9F4F2; --paper-2:#F3EBEC; --surface:#FFFFFF;
+  --ink:#2A2028; --ink-soft:#4C3F48; --muted:#6F5F68; --faint:#9E8E96;
+  --line:#ECE1E4; --line-2:#D9C9CF;
+  --rose:#C76B8E; --rose-deep:#A8506F; --rose-soft:#FFE1EC;
+  --accent:var(--rose); --accent-deep:var(--rose-deep); --accent-soft:var(--rose-soft);
+  --euca:#2F9E7C; --euca-deep:#25795F; --euca-soft:#EAFAF3;
+  --ink-2-dark:#3A1F2B;
+  --on-dark:#F3E9EC;
+  --shadow-s:0 1px 2px rgba(42,32,40,.04), 0 8px 30px rgba(42,32,40,.07);
+  --shadow-m:0 2px 4px rgba(42,32,40,.05), 0 14px 44px rgba(42,32,40,.10);
+  --shadow-l:0 4px 8px rgba(42,32,40,.06), 0 30px 70px rgba(42,32,40,.14);
+  --r-s:12px; --r-m:16px; --r-l:24px;
+  --sans:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --display:"Avenir Next", "Futura", "Century Gothic", "Segoe UI", system-ui, sans-serif;
+  --mono:"SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink-soft);
+  font-family:var(--sans); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  min-height:100vh; min-height:100dvh; display:flex; flex-direction:column;
+  overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(60rem 40rem at 82% -8%, rgba(199,107,142,.12), transparent 60%),
+    radial-gradient(50rem 40rem at -10% 12%, rgba(47,158,124,.07), transparent 55%);
+}
+h1,h2,h3{font-family:var(--display); color:var(--ink); font-weight:700; line-height:1.15; letter-spacing:-.025em; margin:0}
+p{margin:0}
+a{color:inherit; text-decoration:none}
+img,svg{display:block; max-width:100%}
+:focus-visible{outline:2.5px solid var(--accent); outline-offset:3px; border-radius:6px}
+
+/* ============ WORDMARK ============ */
+.wm{font-family:var(--display); line-height:.9; letter-spacing:-.03em; white-space:nowrap; font-size:25px}
+.wm .we{font-weight:800; color:var(--ink)}
+.wm .cl{font-weight:500; color:var(--rose)}
+
+/* ============ HEADER ============ */
+.hdr{position:sticky; top:0; z-index:50; background:rgba(249,244,242,.9);
+  backdrop-filter:saturate(1.4) blur(14px); border-bottom:1px solid var(--line)}
+.hdr-in{max-width:760px; margin:0 auto; padding:0 20px; height:66px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px}
+.back{display:inline-flex; align-items:center; gap:7px; font-family:var(--display);
+  font-size:14px; font-weight:600; color:var(--muted); transition:.15s}
+.back:hover{color:var(--accent)}
+.prog{height:3px; background:var(--line); position:relative; overflow:hidden}
+.prog i{position:absolute; inset:0 auto 0 0; width:0%; background:linear-gradient(90deg,var(--rose),var(--rose-deep));
+  border-radius:0 3px 3px 0; transition:width .45s var(--ease-out)}
+
+/* ============ SHELL ============ */
+.shell{flex:1; position:relative; z-index:1; width:100%; max-width:760px; min-width:0; margin:0 auto;
+  padding:26px 20px 0; display:flex; flex-direction:column}
+.intro{text-align:center; margin-bottom:24px}
+.eyebrow{display:inline-flex; align-items:center; gap:10px; font-family:var(--mono);
+  font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--rose-deep)}
+.eyebrow::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--rose); flex:none}
+.intro h1{font-size:clamp(24px,4.4vw,33px); margin-top:12px}
+.intro .bar{display:block; width:56px; height:5px; background:var(--rose); border-radius:3px; margin:16px auto 0}
+
+/* ============ CHAT ============ */
+.chat{display:flex; flex-direction:column; gap:12px; padding:4px 0 8px; min-width:0}
+.row{display:flex; gap:10px; align-items:flex-end; width:100%; min-width:0}
+.row.bot{justify-content:flex-start}
+.row.me{justify-content:flex-end}
+.av{width:34px; height:34px; border-radius:999px; flex:none; overflow:hidden;
+  box-shadow:0 2px 8px rgba(42,32,40,.14); background:var(--ink)}
+.av.ghost{visibility:hidden}
+.bub{max-width:min(76%,470px); padding:14px 18px; font-size:15.5px; line-height:1.55;
+  border-radius:var(--r-m); animation:pop .34s var(--ease-out) both; overflow-wrap:break-word}
+.row.bot .bub{background:var(--surface); color:var(--ink-soft); border:1px solid var(--line);
+  border-bottom-left-radius:6px; box-shadow:var(--shadow-s)}
+.row.me .bub{background:linear-gradient(150deg,var(--rose),var(--rose-deep)); color:#fff;
+  border-bottom-right-radius:6px; box-shadow:0 8px 22px rgba(199,107,142,.28); font-weight:500}
+.bub b,.bub strong{color:var(--ink); font-weight:700}
+.row.me .bub b{color:#fff}
+@keyframes pop{from{opacity:0; transform:translateY(10px) scale(.985)} to{opacity:1; transform:none}}
+
+/* digitando */
+.dots{display:inline-flex; gap:5px; padding:4px 2px}
+.dots i{width:7px; height:7px; border-radius:999px; background:var(--line-2); animation:bl 1.25s infinite}
+.dots i:nth-child(2){animation-delay:.18s} .dots i:nth-child(3){animation-delay:.36s}
+@keyframes bl{0%,100%{opacity:.35; transform:translateY(0)} 40%{opacity:1; transform:translateY(-3px)}}
+
+/* ============ DOCK (respostas) ============ */
+.dock{position:sticky; bottom:0; z-index:20; width:100%; max-width:760px; min-width:0; margin:0 auto;
+  padding:14px 20px 20px;
+  background:linear-gradient(to top, var(--paper) 34%, rgba(249,244,242,.86) 72%, rgba(249,244,242,0));
+}
+.dock-in{display:flex; flex-direction:column; gap:10px; animation:pop .3s var(--ease-out) both}
+.field{display:flex; align-items:center; gap:10px; background:var(--surface); border:1.5px solid var(--line-2);
+  border-radius:999px; padding:6px 6px 6px 20px; box-shadow:var(--shadow-s); transition:.18s ease}
+.field:focus-within{border-color:var(--accent); box-shadow:0 0 0 4px rgba(199,107,142,.13)}
+.field input{flex:1; min-width:0; border:0; outline:0; background:transparent; font:inherit;
+  font-size:16px; color:var(--ink); padding:11px 0}
+.field input::placeholder{color:var(--faint)}
+.field .ddi{flex:none; font-family:var(--display); font-weight:700; font-size:15px; color:var(--muted);
+  padding-right:10px; margin-right:2px; border-right:1px solid var(--line)}
+.send{width:46px; height:46px; flex:none; border:0; border-radius:999px; cursor:pointer;
+  background:var(--accent); color:#fff; display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(199,107,142,.3); transition:.18s ease}
+.send:hover{background:var(--accent-deep); transform:translateY(-1px)}
+.send:disabled{background:var(--line-2); box-shadow:none; cursor:not-allowed; transform:none}
+
+.opts{display:flex; flex-direction:column; gap:9px; max-height:min(52vh,430px); overflow-y:auto;
+  padding:2px; margin:-2px}
+.opt{width:100%; text-align:left; font-family:var(--display); font-size:15px; font-weight:600;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line);
+  border-radius:14px; padding:14px 18px; cursor:pointer; transition:.16s ease;
+  box-shadow:var(--shadow-s); display:flex; align-items:center; gap:12px; line-height:1.4}
+.opt:hover{border-color:var(--accent); color:var(--accent-deep); transform:translateY(-2px);
+  box-shadow:var(--shadow-m)}
+.opt .dot{width:9px; height:9px; border-radius:999px; background:var(--rose-soft); border:2px solid var(--rose); flex:none}
+.opt.wide{justify-content:center; text-align:center}
+
+.cta-start{align-self:flex-end; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-family:var(--display); font-weight:700; font-size:16px; letter-spacing:-.01em;
+  padding:16px 30px; border-radius:999px; border:0; cursor:pointer; color:#fff;
+  background:linear-gradient(150deg,var(--rose),var(--rose-deep));
+  box-shadow:0 10px 26px rgba(199,107,142,.32); transition:.18s ease}
+.cta-start:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(199,107,142,.4)}
+
+.hint{font-size:12.5px; color:var(--faint); text-align:center; font-family:var(--mono);
+  letter-spacing:.02em}
+.err{font-size:13px; color:var(--rose-deep); font-weight:600; text-align:center}
+
+/* ============ FINAL ============ */
+.done{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-l);
+  padding:40px 30px; text-align:center; box-shadow:var(--shadow-l); margin:8px 0 28px;
+  animation:pop .4s var(--ease-out) both}
+.done .ic{width:62px; height:62px; margin:0 auto 20px; border-radius:999px; background:var(--euca-soft);
+  color:var(--euca-deep); display:flex; align-items:center; justify-content:center}
+.done h2{font-size:clamp(22px,3.6vw,29px)}
+.done p{margin-top:14px; color:var(--muted); font-size:16px; max-width:44ch; margin-left:auto; margin-right:auto}
+.done .btn{display:inline-flex; align-items:center; gap:9px; margin-top:26px; font-family:var(--display);
+  font-weight:600; font-size:15px; padding:15px 26px; border-radius:999px; color:#fff;
+  background:var(--accent); box-shadow:0 8px 22px rgba(199,107,142,.3); transition:.18s ease}
+.done .btn:hover{background:var(--accent-deep); transform:translateY(-2px)}
+.resume{margin:22px auto 0; max-width:420px; text-align:left; border-top:1px solid var(--line); padding-top:18px}
+.resume dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:14px}
+.resume dt{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); align-self:center}
+.resume dd{margin:0; color:var(--ink); font-weight:600}
+
+/* ============ FOOTER ============ */
+.ftr{position:relative; z-index:1; text-align:center; padding:10px 20px 26px;
+  font-size:12.5px; color:var(--faint)}
+.ftr .lgpd{display:inline-flex; align-items:center; gap:7px}
+
+@media (max-width:560px){
+  .bub{max-width:82%; font-size:15px}
+  .shell{padding-top:20px}
+  .intro h1{font-size:23px}
+  .dock{padding:12px 16px 16px}
+  .shell{padding-left:16px; padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important; transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index.html" class="brand" aria-label="we clinic — início">
+      <span class="wm"><span class="we">we</span>&#8202;<span class="cl">clinic</span></span>
+    </a>
+    <a href="index.html" class="back">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Voltar ao site
+    </a>
+  </div>
+  <div class="prog" role="progressbar" aria-label="Progresso da aplicação" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog"><i id="progBar"></i></div>
+</header>
+
+<div class="shell">
+  <div class="intro">
+    <span class="eyebrow">Aplicação · vagas limitadas</span>
+    <h1>Sessão estratégica gratuita</h1>
+    <span class="bar" aria-hidden="true"></span>
+  </div>
+
+  <div class="chat" id="chat" aria-live="polite" aria-atomic="false"></div>
+</div>
+
+<div class="dock"><div id="dock" class="dock-in"></div></div>
+
+<footer class="ftr">
+  <span class="lgpd">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    Os seus dados são usados apenas para o contato desta sessão · LGPD
+  </span>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ===================================================================
+     ENVIO DAS RESPOSTAS  →  Supabase (tabela weclinic_aplicacoes)
+     A chave abaixo é pública (publishable) e só permite INSERT: a RLS
+     da tabela não libera leitura, então ninguém consegue baixar os leads
+     pelo navegador. Os dados também ficam salvos em localStorage
+     ("weclinic_aplicacao") como cópia de segurança local.
+
+     Para mandar em paralelo pra um webhook (Make, n8n, Zapier…),
+     é só colar a URL em WEBHOOK.
+     =================================================================== */
+  var SUPABASE_URL = 'https://btfbeoercmikknhtimxf.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_RKspnsmDFr-sIdF1e4gmbw__uu_P76D';
+  var WEBHOOK = '';
+
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============ FLUXO (mesmas perguntas do formulário original) ============ */
+  var FLOW = [
+    { id:'intro', bot:[
+      'Esta é uma sessão gratuita exclusivamente para <b>Médicos e Donos de Clínica.</b> Aplique apenas se for o seu caso.',
+      '<b>IMPORTANTE:</b> A aplicação através deste formulário não garante a sua vaga. Vamos analisar cuidadosamente as aplicações e aceitar apenas quem tem capacidade máxima de tirar valor dessa sessão estratégica gratuita.'
+    ], ask:{ type:'start', label:'Toque para começar' } },
+
+    { id:'nome', bot:['Qual o seu nome?'],
+      ask:{ type:'text', key:'nome', placeholder:'Digite o seu nome', hint:'Enter para enviar' } },
+
+    { id:'whatsapp', bot:[
+      '<b>Importante:</b> Para que consigamos entrar em contato pra te avisar sobre a sua aprovação.',
+      'Qual o seu Whatsapp?'
+    ], ask:{ type:'tel', key:'whatsapp', placeholder:'(11) 90000-0000', hint:'Com DDD, no formato (11) 90000-0000' } },
+
+    { id:'confirma', bot:['Então, {nome}. O número {whatsapp} está correto? <b>(Um número errado pode fazer você perder sua vaga)</b>'],
+      ask:{ type:'choice', key:'confirmacao', options:[
+        { label:'Sim' },
+        { label:'Não, quero corrigir', goto:'whatsapp' }
+      ]} },
+
+    { id:'email', bot:['Qual o seu melhor email?','(Só lembrando que vamos mandar o link da sessão por lá)'],
+      ask:{ type:'email', key:'email', placeholder:'voce@email.com' } },
+
+    { id:'perfil', bot:['Você é Médico ou Dono de Clínica?'],
+      ask:{ type:'choice', key:'perfil', options:[ {label:'Sim'}, {label:'Não'} ] } },
+
+    { id:'site', bot:['Maravilha! Qual o seu site?','Caso não tiver site, coloque aqui seu Instagram.'],
+      ask:{ type:'text', key:'site', placeholder:'suaclinica.com.br ou @suaclinica' } },
+
+    { id:'faturamento', bot:['Show!','{nome}, qual o faturamento MENSAL do seu negócio?'],
+      ask:{ type:'choice', key:'faturamento', options:[
+        { label:'Até R$5K' },
+        { label:'De R$5K a R$10K' },
+        { label:'De R$10K a R$30K' },
+        { label:'De R$30K a R$50K' },
+        { label:'De R$50K a R$100K' },
+        { label:'Acima de R$100K' }
+      ]} },
+
+    { id:'investimento', bot:['Se você tivesse acesso a <b>estratégia perfeita</b> para aumentar o seu faturamento, quanto estaria disposto a investir por mês?'],
+      ask:{ type:'choice', key:'investimento', wide:true, options:[
+        { label:'De R$1.500 a R$1.999' },
+        { label:'De R$2.000 a R$2.600' },
+        { label:'De R$2.600 a R$4.000' },
+        { label:'De R$4.100 a R$6.000' },
+        { label:'De R$6.100 a R$10.000' },
+        { label:'De R$10.100 a R$15.000' },
+        { label:'Acima de R$15.000' },
+        { label:'Não Estou Disposto a Investir Nada' }
+      ]} },
+
+    { id:'momento', bot:['{nome}, qual das opções abaixo melhor descreve o seu momento atual?'],
+      ask:{ type:'choice', key:'momento', wide:true, options:[
+        { label:'Ouvi falar que o marketing digital pode ajudar meu consultório.' },
+        { label:'Acredito que o marketing digital é bom para o meu consultório, mas preciso saber mais.' },
+        { label:'Estou escolhendo uma empresa de marketing digital para contratar.' }
+      ]} },
+
+    { id:'fim', bot:['Perfeito, {nome}. Aplicação recebida!'], ask:{ type:'end' } }
+  ];
+
+  var chat = document.getElementById('chat');
+  var dock = document.getElementById('dock');
+  var prog = document.getElementById('prog');
+  var progBar = document.getElementById('progBar');
+
+  var data = {};
+  var index = 0;
+  var answered = 0;
+  var TOTAL = FLOW.filter(function(s){ return s.ask && ['text','tel','email','choice'].indexOf(s.ask.type) > -1; }).length;
+
+  /* ---------- helpers ---------- */
+  function esc(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fill(tpl){
+    return tpl.replace(/\{(\w+)\}/g, function(_, k){
+      return data[k] ? '<b>' + esc(data[k]) + '</b>' : '';
+    });
+  }
+  function scrollDown(){
+    window.scrollTo({ top: document.body.scrollHeight, behavior: REDUCE ? 'auto' : 'smooth' });
+  }
+  function setProgress(){
+    var pct = TOTAL ? Math.round(answered / TOTAL * 100) : 0;
+    progBar.style.width = pct + '%';
+    prog.setAttribute('aria-valuenow', String(pct));
+  }
+  function avatar(){
+    return '<span class="av"><img src="brand/weclinic-icon.svg" alt="" width="34" height="34"/></span>';
+  }
+  function addBot(html){
+    var row = document.createElement('div');
+    row.className = 'row bot';
+    row.innerHTML = avatar() + '<div class="bub">' + html + '</div>';
+    chat.appendChild(row); scrollDown();
+  }
+  function addMe(text){
+    var row = document.createElement('div');
+    row.className = 'row me';
+    row.innerHTML = '<div class="bub">' + esc(text) + '</div>';
+    chat.appendChild(row); scrollDown();
+  }
+  function typing(on){
+    var old = document.getElementById('typing');
+    if(old) old.remove();
+    if(!on) return;
+    var row = document.createElement('div');
+    row.id = 'typing'; row.className = 'row bot';
+    row.innerHTML = avatar() + '<div class="bub"><span class="dots"><i></i><i></i><i></i></span></div>';
+    chat.appendChild(row); scrollDown();
+  }
+  function findStep(id){
+    for(var i=0;i<FLOW.length;i++){ if(FLOW[i].id === id) return i; }
+    return -1;
+  }
+
+  /* ---------- máscara / validação ---------- */
+  /* O "+55" é um prefixo fixo fora do input: aqui mascaramos só o número nacional,
+     assim DDDs que começam com 55 (ex.: 55 / RS) não são confundidos com o DDI. */
+  function maskPhone(v){
+    var d = v.replace(/\D/g,'');
+    if(d.length > 11 && d.indexOf('55') === 0) d = d.slice(2); // colou com DDI
+    d = d.slice(0,11);
+    if(!d) return '';
+    if(d.length <= 2) return '(' + d;
+    if(d.length <= 6) return '(' + d.slice(0,2) + ') ' + d.slice(2);
+    if(d.length <= 10) return '(' + d.slice(0,2) + ') ' + d.slice(2,6) + '-' + d.slice(6);
+    return '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+  }
+  function validate(type, v){
+    v = v.trim();
+    if(!v) return 'Preencha este campo para continuar.';
+    if(type === 'email' && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return 'Digite um email válido.';
+    if(type === 'tel'){
+      var d = v.replace(/\D/g,'');
+      if(d.length < 10) return 'Digite o número completo, com DDD.';
+    }
+    if(type === 'text' && v.length < 2) return 'Escreva um pouco mais.';
+    return '';
+  }
+
+  /* ---------- render das respostas ---------- */
+  function clearDock(){ dock.innerHTML = ''; }
+
+  function renderStart(ask){
+    clearDock();
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'cta-start'; b.textContent = ask.label;
+    b.addEventListener('click', function(){
+      addMe(ask.label);
+      next();
+    });
+    dock.appendChild(b);
+    b.focus({ preventScroll:true });
+  }
+
+  function renderInput(ask){
+    clearDock();
+    var form = document.createElement('form');
+    form.noValidate = true;
+    form.innerHTML =
+      '<div class="field">' +
+        (ask.type === 'tel' ? '<span class="ddi" aria-hidden="true">+55</span>' : '') +
+        '<input id="ans" type="' + (ask.type === 'email' ? 'email' : ask.type === 'tel' ? 'tel' : 'text') + '" ' +
+          'inputmode="' + (ask.type === 'email' ? 'email' : ask.type === 'tel' ? 'tel' : 'text') + '" ' +
+          'autocomplete="' + (ask.key === 'nome' ? 'name' : ask.type === 'email' ? 'email' : ask.type === 'tel' ? 'tel' : 'off') + '" ' +
+          'placeholder="' + esc(ask.placeholder || '') + '" aria-label="Sua resposta"/>' +
+        '<button class="send" type="submit" aria-label="Enviar resposta">' +
+          '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="hint">' + esc(ask.hint || 'Pressione Enter para enviar') + '</div>';
+
+    var input = form.querySelector('#ans');
+    var hint = form.querySelector('.hint');
+
+    if(ask.type === 'tel'){
+      input.addEventListener('input', function(){
+        input.value = maskPhone(input.value);
+      });
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = input.value.trim();
+      var msg = validate(ask.type, v);
+      if(msg){
+        hint.className = 'err'; hint.textContent = msg;
+        input.focus(); return;
+      }
+      if(ask.type === 'tel') v = '+55 ' + v;
+      data[ask.key] = v;
+      answered++; setProgress();
+      addMe(v);
+      next();
+    });
+
+    dock.appendChild(form);
+    input.focus({ preventScroll:true });
+  }
+
+  function renderChoice(ask){
+    clearDock();
+    var box = document.createElement('div');
+    box.className = 'opts';
+    box.setAttribute('role','group');
+    ask.options.forEach(function(op){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt' + (ask.wide ? ' wide' : '');
+      b.innerHTML = (ask.wide ? '' : '<span class="dot" aria-hidden="true"></span>') + '<span>' + esc(op.label) + '</span>';
+      b.addEventListener('click', function(){
+        addMe(op.label);
+        if(op.goto){
+          // volta para refazer a pergunta indicada (ex.: corrigir o WhatsApp)
+          var i = findStep(op.goto);
+          if(i > -1){
+            var k = FLOW[i].ask.key;
+            if(k && data[k] !== undefined){ delete data[k]; answered = Math.max(0, answered - 1); }
+            setProgress();
+            index = i; play();
+            return;
+          }
+        }
+        data[ask.key] = op.label;
+        answered++; setProgress();
+        next();
+      });
+      box.appendChild(b);
+    });
+    dock.appendChild(box);
+    var first = box.querySelector('.opt');
+    if(first) first.focus({ preventScroll:true });
+  }
+
+  function renderEnd(){
+    clearDock();
+    setProgress();
+    submit();
+
+    var labels = {
+      nome:'Nome', whatsapp:'WhatsApp', email:'Email', perfil:'Médico / dono de clínica',
+      site:'Site ou Instagram', faturamento:'Faturamento mensal',
+      investimento:'Investimento por mês', momento:'Momento atual'
+    };
+    var rows = '';
+    Object.keys(labels).forEach(function(k){
+      if(data[k]) rows += '<dt>' + labels[k] + '</dt><dd>' + esc(data[k]) + '</dd>';
+    });
+
+    var card = document.createElement('div');
+    card.className = 'done';
+    card.innerHTML =
+      '<div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+      '<h2>Aplicação enviada</h2>' +
+      '<p>Vamos analisar a sua aplicação e, se você for aprovado, entramos em contato pelo WhatsApp e enviamos o link da sessão por email.</p>' +
+      '<div class="resume"><dl>' + rows + '</dl></div>' +
+      '<a class="btn" href="index.html">Voltar ao site' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '</a>';
+    document.querySelector('.shell').appendChild(card);
+    scrollDown();
+    card.querySelector('.btn').focus({ preventScroll:true });
+  }
+
+  function submit(){
+    var payload = {
+      origem: 'landing page we clinic',
+      pagina: location.href,
+      respostas: data
+    };
+    try{ localStorage.setItem('weclinic_aplicacao', JSON.stringify(payload)); }catch(e){}
+
+    var row = {
+      nome:         data.nome || '',
+      whatsapp:     data.whatsapp || '',
+      email:        data.email || '',
+      confirmacao:  data.confirmacao || null,
+      perfil:       data.perfil || null,
+      site:         data.site || null,
+      faturamento:  data.faturamento || null,
+      investimento: data.investimento || null,
+      momento:      data.momento || null,
+      origem:       payload.origem,
+      pagina:       payload.pagina,
+      respostas:    data
+    };
+
+    try{
+      fetch(SUPABASE_URL + '/rest/v1/weclinic_aplicacoes', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(row),
+        keepalive: true
+      })['catch'](function(){});
+    }catch(e){}
+
+    if(!WEBHOOK){ return; }
+    try{
+      fetch(WEBHOOK, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true
+      })['catch'](function(){});
+    }catch(e){}
+  }
+
+  /* ---------- motor ---------- */
+  function next(){ index++; play(); }
+
+  function play(){
+    clearDock();
+    var step = FLOW[index];
+    if(!step) return;
+
+    var msgs = step.bot.slice();
+    var i = 0;
+    function say(){
+      if(i >= msgs.length){
+        typing(false);
+        var ask = step.ask;
+        if(ask.type === 'start') renderStart(ask);
+        else if(ask.type === 'choice') renderChoice(ask);
+        else if(ask.type === 'end') renderEnd();
+        else renderInput(ask);
+        return;
+      }
+      var html = fill(msgs[i]); i++;
+      typing(true);
+      setTimeout(function(){
+        typing(false);
+        addBot(html);
+        setTimeout(say, REDUCE ? 0 : 240);
+      }, REDUCE ? 0 : (420 + Math.min(700, html.length * 5)));
+    }
+    say();
+  }
+
+  setProgress();
+  play();
+})();
+</script>
+</body>
+</html>
