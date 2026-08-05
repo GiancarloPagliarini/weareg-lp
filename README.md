@@ -7,10 +7,21 @@ função serverless em `api/contact.js` que envia o formulário de contato via [
 
 ```
 index.html            página principal (formulário na seção #contact)
-api/contact.js        função serverless: valida o POST e dispara o e-mail
+api/contact.js        função serverless: valida o POST e dispara os e-mails
+lib/emails.js         templates HTML dos e-mails, na identidade da marca
 clinicas/             landing WeClinic
 playbook.html         páginas de apoio / previews
 ```
+
+Cada envio do formulário dispara **dois** e-mails:
+
+1. **Notificação** para `CONTACT_TO`, com `replyTo` no e-mail do lead — responder no
+   cliente de e-mail já endereça direto para quem preencheu.
+2. **Confirmação** para o lead, com `replyTo` em `CONTACT_TO`.
+
+A notificação é crítica: se falhar, a API responde erro e o formulário avisa o usuário.
+A confirmação é best-effort — se a Resend recusar, o erro vai para o log mas a requisição
+segue como sucesso, porque o lead já chegou ao comercial.
 
 ## Variáveis de ambiente
 
@@ -20,7 +31,8 @@ Configurar em **Vercel → Project → Settings → Environment Variables** (Pro
 |---|---|---|---|
 | `RESEND_API_KEY` | sim | — | API key da Resend (`re_...`). Nunca comitar. |
 | `CONTACT_TO` | não | `comercial@weareg.com.br` | Destinatário das mensagens. |
-| `CONTACT_FROM` | não | `Site WeAreG <contato@weareg.com.br>` | Remetente. O domínio precisa estar verificado na Resend. |
+| `CONTACT_FROM` | não | `WeAreG <contato@weareg.com.br>` | Remetente. O domínio precisa estar verificado na Resend. |
+| `SITE_URL` | não | `https://www.weareg.com.br` | Base das imagens e links dos e-mails. Precisa ser URL absoluta e pública — é de onde os clientes de e-mail baixam o logo. |
 
 ## Checklist de migração para a Vercel
 
