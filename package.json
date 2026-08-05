@@ -1,0 +1,10 @@
+{
+  "name": "weareg-lp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing page WeAreG",
+  "dependencies": {
+    "resend": "^6.18.1"
+  }
+}
